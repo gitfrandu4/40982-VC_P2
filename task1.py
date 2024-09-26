@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-#Lee imagen de archivo
+# Read the image
 img = cv2.imread('mandril.jpg') 
 
 #Conversión de la imagen a niveles de grises de la imagen original en BGR
