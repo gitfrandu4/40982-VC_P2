@@ -2,6 +2,18 @@
 
 Este repositorio contiene la **Práctica 2** sobre el uso de **OpenCV** y **NumPy** para el procesamiento de imágenes, donde se exploran tareas como la conversión a escala de grises, la detección de bordes y el análisis de píxeles en imágenes.
 
+# Índice
+
+- [Práctica 2: Funciones básicas de OpenCV](#práctica-2-funciones-básicas-de-opencv)
+  - [Librerías utilizadas](#librerías-utilizadas)
+  - [Autores](#autores)
+  - [Tareas](#tareas)
+    - [Tarea 1](#tarea-1)
+    - [Tarea 2](#tarea-2)
+    - [Tarea 3](#tarea-3)
+    - [Tarea 4](#tarea-4)
+  - [Referencias y bibliografía](#referencias-y-bibliografía)
+
 ## Librerías utilizadas
 
 [![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy)](https://numpy.org/)
