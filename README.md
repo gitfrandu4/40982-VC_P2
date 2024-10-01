@@ -19,6 +19,30 @@ Este proyecto fue desarrollado por:
 
 ### Tarea 1
 
+#### 1.1 Detección de Bordes con Canny y Análisis de Píxeles
+
+* **Canny**: Se convierte la imagen a escala de grises y se aplica el detector de bordes Canny con umbrales 250 y 100.
+* **Análisis de Píxeles Blancos**: Se cuenta el número de píxeles blancos por filas y columnas usando `cv2.reduce` y `np.sum`. Los resultados se normalizan para obtener porcentajes.
+
+<img src="Images/task_1_1.png" width="800" alt="Resultado Tarea 1.1">
+  
+#### Tarea 1.2
+
+* **Cálculo de `maxfil`**: Se determina el número máximo de píxeles blancos por fila y columna (`maxfil` y `maxcol`).
+* **Umbral 95%**: Se identifican filas y columnas con al menos el 95% de los píxeles blancos de `maxfil` y `maxcol`.
+* **Resultado**: Se muestran las posiciones de las filas y columnas clave y se resaltan visualmente en la imagen.
+
+```
+* Maximum white pixels in a row: 218
+* Number of rows with white pixels >= 0.95 * maxfil: 2
+* Positions of these rows: [ 12 100]
+
+* Maximum white pixels in a column: 184
+* Number of columns with white pixels >= 0.95 * maxcol: 3
+* Positions of these columns: [104 115 119]
+```
+
+<img src="Images/task_1_2.png" width="300" alt="Resultado Tarea 1.2">
 
 ### Tarea 2
 En este proyecto, aplicamos el operador Sobel a una imagen en escala de grises para detectar sus bordes y luego binarizamos el resultado mediante umbralizado. Los pasos clave fueron:
