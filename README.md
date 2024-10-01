@@ -13,7 +13,7 @@ Este repositorio contiene la **Práctica 2** sobre el uso de **OpenCV** y **NumP
 Este proyecto fue desarrollado por:
 
 - [![GitHub](https://img.shields.io/badge/GitHub-Francisco%20Javier%20L%C3%B3pez%E2%80%93Dufour%20Morales-yellow?style=flat-square&logo=github)](https://github.com/gitfrandu4)
-- [![GitHub](https://img.shields.io/badge/GitHub-Marcos%20V%C3%A1zquez%20Tascon-red?style=flat-square&logo=github)](https://github.com/DerKom)
+- [![GitHub](https://img.shields.io/badge/GitHub-Marcos%20V%C3%A1zquez%20Tasc%C3%B3n-red?style=flat-square&logo=github)](https://github.com/DerKom)
 
 ## Tareas
 
