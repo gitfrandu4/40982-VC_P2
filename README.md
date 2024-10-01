@@ -142,6 +142,9 @@ En este proyecto, desarrollé un demostrador que captura imágenes de la cámara
    combined = np.vstack((combined_top, combined_bottom))
    ```
 
+#### Resultado
+<img src="task3Result.png" width="400" height="355" alt="Resultado Task-3">
+
 ### Tarea 4
 
 
