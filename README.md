@@ -79,10 +79,7 @@ plt.axis('off')
 plt.show()
 ```
 
-Este enfoque nos permitió identificar y resaltar las áreas de mayor densidad de bordes en la imagen, ofreciendo una comprensión visual de cómo diferentes métodos de detección afectan el resultado final.
-
-
-### Tarea 3: Demostrador de OpenCV con Cámara Web
+### Tarea 3
 
 En este proyecto, desarrollé un demostrador que captura imágenes de la cámara web y aplica diferentes funciones de OpenCV para mostrar lo aprendido en las prácticas anteriores. El programa muestra la imagen original junto con tres efectos distintos en una sola ventana.
 
