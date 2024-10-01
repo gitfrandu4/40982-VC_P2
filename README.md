@@ -149,7 +149,7 @@ En este proyecto, desarrollé un demostrador que captura imágenes de la cámara
    ```
 
 #### Resultado
-<img src="Images/task3Result.png" width="600" height="600" alt="Resultado Task-3">
+<img src="Images/task3Result.png" width="700" height="600" alt="Resultado Task-3">
 
 ### Tarea 4
 
