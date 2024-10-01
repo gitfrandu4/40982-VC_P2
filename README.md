@@ -80,9 +80,9 @@ plt.show()
 ```
 
 #### Resultado
-<img src="Images/task2Result1.png" width="400" height="355" alt="Resultado Task-2.1">
-<img src="Images/task2Result2.png" width="400" height="355" alt="Resultado Task-2.2">
-<img src="Images/task2Result3.png" width="400" height="355" alt="Resultado Task-2.3">
+<img src="Images/task2Result1.png" width="1200" height="400" alt="Resultado Task-2.1">
+<img src="Images/task2Result2.png" width="800" height="400" alt="Resultado Task-2.2">
+<img src="Images/task2Result3.png" width="400" height="400" alt="Resultado Task-2.3">
 
 
 ### Tarea 3
