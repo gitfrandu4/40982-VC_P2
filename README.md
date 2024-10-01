@@ -79,6 +79,12 @@ plt.axis('off')
 plt.show()
 ```
 
+#### Resultado
+<img src="Images/task2Result1.png" width="400" height="355" alt="Resultado Task-2.1">
+<img src="Images/task2Result2.png" width="400" height="355" alt="Resultado Task-2.2">
+<img src="Images/task2Result3.png" width="400" height="355" alt="Resultado Task-2.3">
+
+
 ### Tarea 3
 
 En este proyecto, desarrollé un demostrador que captura imágenes de la cámara web y aplica diferentes funciones de OpenCV para mostrar lo aprendido en las prácticas anteriores. El programa muestra la imagen original junto con tres efectos distintos en una sola ventana.
@@ -143,7 +149,7 @@ En este proyecto, desarrollé un demostrador que captura imágenes de la cámara
    ```
 
 #### Resultado
-<img src="task3Result.png" width="400" height="355" alt="Resultado Task-3">
+<img src="Images/task3Result.png" width="400" height="355" alt="Resultado Task-3">
 
 ### Tarea 4
 
