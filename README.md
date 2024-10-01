@@ -21,128 +21,129 @@ Este proyecto fue desarrollado por:
 
 
 ### Tarea 2
+En este proyecto, aplicamos el operador Sobel a una imagen en escala de grises para detectar sus bordes y luego binarizamos el resultado mediante umbralizado. Los pasos clave fueron:
+
+#### Procesamiento de la Imagen
+
+- Convertimos la imagen a escala de grises y aplicamos un filtro Gaussiano para suavizarla y reducir el ruido.
+- Calculamos el gradiente Sobel en las direcciones x e y y combinamos ambos resultados.
+- Convertimos el resultado a 8 bits y aplicamos un umbral para obtener una imagen binaria de los bordes.
 
 ```python
-#Para poder ejecutar el código, unicamente ejecutando este bloque, vamos a incorporar elementos de los anteriores bloques
-import cv2  
-import numpy as np
-import matplotlib.pyplot as plt
-
-#Lee imagen de archivo
-img = cv2.imread('mandril.jpg') 
-
-#Si hay lectura correcta
-if img is None:
-    print('Imagen no encontrada')
-
-#Conversión de la imagen a niveles de grises de la imagen original en BGR
 gris = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-# Gaussiana para suavizar la imagen original, eliminando altas frecuencias
 ggris = cv2.GaussianBlur(gris, (3, 3), 0)
-
-#Calcula en ambas direcciones (horizontal y vertical)
-sobelx = cv2.Sobel(ggris, cv2.CV_64F, 1, 0)  # x
-sobely = cv2.Sobel(ggris, cv2.CV_64F, 0, 1)  # y
-
-#Combina ambos resultados
+sobelx = cv2.Sobel(ggris, cv2.CV_64F, 1, 0)
+sobely = cv2.Sobel(ggris, cv2.CV_64F, 0, 1)
 sobel = cv2.add(sobelx, sobely)
-
-# Conversión a byte con openCV
 sobel8 = cv2.convertScaleAbs(sobel)
+_, sobel8Umbralizado = cv2.threshold(sobel8, 130, 255, cv2.THRESH_BINARY)
+```
 
-# Realizamos un umbralizado a la imagen
-_, sobel8Umbralizado = cv2.threshold(gris, 130, 255, cv2.THRESH_BINARY)
+#### Análisis de Píxeles
 
-#Muestra un primer resultado, con la comparación de la imagen original, la que tiene aplicada el sobel y la que además tiene el umbralizado.
-plt.figure(figsize=(12, 4))
-plt.title("Imagen Clásica (gris)")
-plt.axis("off")
-plt.subplots_adjust(top=1)#Añadimos un espacio extra entre el título y los subplots
+- Contamos el número de píxeles blancos por filas y columnas utilizando `cv2.reduce`.
+- Normalizamos estos conteos para obtener porcentajes respecto al total.
 
-plt.subplot(1, 3, 1)
-plt.axis("off")
-plt.title('Original')
-plt.imshow(gris, cmap='gray')
-
-plt.subplot(1, 3, 2)
-plt.axis("off")
-plt.title('Sobel')
-plt.imshow(sobel8, cmap='gray')
-
-plt.subplot(1, 3, 3)
-plt.axis("off")
-plt.title('Sobel umbralizado')
-plt.imshow(sobel8Umbralizado, cmap='gray')
-
-plt.show()
-
-col_counts = cv2.reduce(sobel8Umbralizado, 0, cv2.REDUCE_SUM, dtype=cv2.CV_32SC1)
-#Normaliza en base al número de filas, primer valor devuelto por shape, y al valor máximo del píxel (255)
-#El resultado será el número de píxeles blancos por columna
-fil_counts = cv2.reduce(sobel8Umbralizado, 1, cv2.REDUCE_SUM, dtype=cv2.CV_32SC1)
-fil_counts = fil_counts.flatten() #El resultado es una matriz de [num filas][1] y no intera tenerlo como un array undimensional, por así decirlo no tener un segunda array con solo el valor de la suma
-
+```python
+col_counts = cv2.reduce(sobel8Umbralizado, 0, cv2.REDUCE_SUM)
+fil_counts = cv2.reduce(sobel8Umbralizado, 1, cv2.REDUCE_SUM).flatten()
 cols = col_counts[0] / (255 * sobel8Umbralizado.shape[0])
 filas = fil_counts / (255 * sobel8Umbralizado.shape[1])
+```
 
+#### Identificación de Filas y Columnas Significativas
 
-#Dibujamos los gráficos que muestra el % de pixels blancos, tanto por columnas como por filas
-plt.figure(figsize=(8, 4))
+- Calculamos el 95% del valor máximo de los porcentajes obtenidos.
+- Identificamos las filas y columnas que superan este umbral.
 
-plt.subplot(1, 2, 1)
-plt.title("Pixels Blancos por Columna")
-plt.xlabel("Columnas")
-plt.ylabel("% Pixels Blancos")
-plt.plot(cols, color='blue')
-plt.xlim([0, sobel8Umbralizado.shape[1]])
-plt.grid(True)
+```python
+limiteFila = np.max(filas) * 0.95
+limiteColumna = np.max(cols) * 0.95
+filas_superiores = np.where(filas >= limiteFila)[0]
+columnas_superiores = np.where(cols >= limiteColumna)[0]
+```
 
-plt.subplot(1, 2, 2)
-plt.title("Pixels Blancos por Fila")
-plt.xlabel("Filas")
-plt.ylabel("% Pixels Blancos")
-plt.plot(filas, color='green')
-plt.xlim([0, sobel8Umbralizado.shape[0]])
-plt.grid(True)
+#### Visualización
 
-plt.tight_layout(pad=3.0)
-plt.show()
+- Remarcamos las filas y columnas significativas en la imagen binarizada.
+- Observamos que, en comparación con el método de Canny, Sobel es más sensible al ruido y produce bordes menos definidos, mientras que Canny ofrece una detección más precisa.
 
-#Determinamos el valor de la fila y de la columna con el mayor cantidad de pixels blancos
-maxfil = np.max(filas)
-maxcol = np.max(cols)
-
-#Ahora marcamos los límites (95%+) a partir de las cuales buscaremos la filas que cumplan dichos requisitos
-limiteFila = maxfil * 0.95
-limiteColumna = maxcol * 0.95
-
-#Buscamos las filas y columnas cuyo % de pixels blancos es un 95% o mas con respecto a la fila con mayor cantidad de estos.
-filasSuperioresAlLimite = np.where(filas >= limiteFila)
-columnasSuperioresAlLimite = np.where(cols >= limiteColumna)
-
-# Convertimos la imagen en escala de grises a BGR para poder dibujar en color
-#gris_bgr = cv2.cvtColor(gris, cv2.COLOR_GRAY2BGR)
+```python
 sobel8Umbralizado_bgr = cv2.cvtColor(sobel8Umbralizado, cv2.COLOR_GRAY2BGR)
-
-# Remarcamos las filas que cumplen con el criterio
-for fila in filasSuperioresAlLimite[0]:
-    cv2.line(sobel8Umbralizado_bgr, (0, fila), (gris_bgr.shape[1]-1, fila), (0, 0, 255), 1)
-
-# Remarcamos las columnas que cumplen con el criterio
-for columna in columnasSuperioresAlLimite[0]:
-    cv2.line(sobel8Umbralizado_bgr, (columna, 0), (columna, gris_bgr.shape[0]-1), (255, 0, 0), 1)
-
-# Mostramos la imagen con las filas y columnas remarcadas
-plt.figure(figsize=(4, 4))
+for fila in filas_superiores:
+    cv2.line(sobel8Umbralizado_bgr, (0, fila), (sobel8Umbralizado_bgr.shape[1]-1, fila), (0, 0, 255), 1)
+for columna in columnas_superiores:
+    cv2.line(sobel8Umbralizado_bgr, (columna, 0), (columna, sobel8Umbralizado_bgr.shape[0]-1), (255, 0, 0), 1)
 plt.imshow(cv2.cvtColor(sobel8Umbralizado_bgr, cv2.COLOR_BGR2RGB))
-plt.title('Imagen con filas y columnas remarcadas')
 plt.axis('off')
 plt.show()
 ```
 
-### Tarea 3
+Este enfoque nos permitió identificar y resaltar las áreas de mayor densidad de bordes en la imagen, ofreciendo una comprensión visual de cómo diferentes métodos de detección afectan el resultado final.
 
+
+### Tarea 3: Demostrador de OpenCV con Cámara Web
+
+En este proyecto, desarrollé un demostrador que captura imágenes de la cámara web y aplica diferentes funciones de OpenCV para mostrar lo aprendido en las prácticas anteriores. El programa muestra la imagen original junto con tres efectos distintos en una sola ventana.
+
+#### Captura de la Cámara Web:
+   - Iniciamos la captura de video desde la cámara web y redimensionamos el frame para facilitar el procesamiento.
+
+#### Efecto de Detección de Bordes (Esquina Superior Derecha):
+   - Convertimos el frame a escala de grises y aplicamos un desenfoque Gaussiano para reducir el ruido.
+   - Utilizamos el detector de bordes de Canny para resaltar los bordes en la imagen.
+   - Convertimos la imagen resultante a BGR para poder combinarla con otros efectos.
+
+   ```python
+   # Efecto esquina superior derecha: Canny
+   gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+   blur = cv2.GaussianBlur(gray, (5, 5), 0)
+   edges = cv2.Canny(blur, 50, 150)
+   edges_colored = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
+   ```
+
+#### Detección de Contraste (Esquina Inferior Derecha):
+   - Encontramos los píxeles más brillantes y más oscuros en la imagen en escala de grises.
+   - Marcamos estos píxeles en el frame original con círculos y etiquetas.
+
+   ```python
+   # Efecto esquina inferior derecha: Detector de contraste
+   min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(gray)
+   contrastDetector = frame.copy()
+   cv2.circle(contrastDetector, min_loc, 10, (255, 0, 0), 2)  # Círculo azul
+   cv2.putText(contrastDetector, 'Oscuro', (min_loc[0] + 10, min_loc[1]),
+               cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+   cv2.circle(contrastDetector, max_loc, 10, (0, 0, 255), 2)  # Círculo rojo
+   cv2.putText(contrastDetector, 'Brillante', (max_loc[0] + 10, max_loc[1]),
+               cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+   ```
+
+#### Efecto Pop Art:
+   - Dividimos el frame en cuatro cuadrantes.
+   - Aplicamos diferentes mapas de color a cada cuadrante para crear un efecto de arte pop.
+
+   ```python
+   # Efecto Pop Art
+   height, width, _ = frame.shape
+   pop_art = np.zeros_like(frame)
+   pop_art[0:height//2, 0:width//2] = cv2.applyColorMap(frame[0:height//2, 0:width//2], cv2.COLORMAP_HSV)
+   pop_art[0:height//2, width//2:width] = cv2.applyColorMap(frame[0:height//2, width//2:width], cv2.COLORMAP_OCEAN)
+   pop_art[height//2:height, 0:width//2] = cv2.applyColorMap(frame[height//2:height, 0:width//2], cv2.COLORMAP_PINK)
+   pop_art[height//2:height, width//2:width] = cv2.applyColorMap(frame[height//2:height, width//2:width], cv2.COLORMAP_SPRING)
+   ```
+
+#### Combinación y Visualización:
+   - Combinamos la imagen original y los efectos en una sola ventana para mostrar los resultados en tiempo real.
+   - Organizamos las imágenes de la siguiente manera:
+     - **Arriba:** Imagen original y detección de bordes.
+     - **Abajo:** Efecto Pop Art y detección de contraste.
+
+   ```python
+   # Combinamos las imágenes
+   combined_top = np.hstack((frame, edges_colored))
+   combined_bottom = np.hstack((pop_art, contrastDetector))
+   combined = np.vstack((combined_top, combined_bottom))
+   ```
 
 ### Tarea 4
 
